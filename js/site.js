@@ -83,37 +83,29 @@ function SendContactForm(FormType) {
         $("#contactNoBModalval").prop("hidden", true);
         $("#SentResponse").prop("disabled", true);
         $("#SentFromContact").prop("disabled", true);
-        var templateParams = {
-          from_name: $("#fullnameBModal").val(),
-          email_id: $("#mailIdBModal").val(),
-          contact_no: $("#contactNoBModal").val(),
-          startdate: $("#StartDateBModal").val(),
-          adult: $("#AdultBModal").val(),
-          // group:$("#GroupBModal").val(),
+        var data = {
+          name: $("#fullnameBModal").val(),
+          mobileNumber: $("#contactNoBModal").val(),
           message: $("#messageBModal").val(),
-          website: "Kerala",
+          website: "Uttrakhand",
         };
         //  console.log(templateParams);
-        emailjs
-          .send(
-            "service_67t7hhj",
-            "template_thv6rqb",
-            templateParams,
-            "nmhVg3RXzbcSkzs_u"
-          )
-          .then(
-            function (response) {
-              swal("Good job!", "Your Response Has been submited!", "success");
-              $("#SentResponse").prop("disabled", false);
-              $("#SentFromContact").prop("disabled", false);
-              $("#myModal").modal("hide");
-            },
-            function (error) {
-              swal("Sorry!", "Its not your fault!", "error");
-              $("#SentResponse").prop("disabled", false);
-              $("#SentFromContact").prop("disabled", false);
-            }
-          );
+        fetch("https://darshanrathbackend.onrender.com/api/sendEmail", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }).then((response) => {
+          console.log(response);
+          swal("Good job!", "Your Response Has been submited!", "success");
+          $("#fullnameBModal").val("");
+          $("#contactNoBModal").val("");
+          $("#messageBModal").val("");
+          // $("#MineBntForm").prop("disabled", false);
+          localStorage.setItem("pkgname", null);
+          return true;
+        });
       }
     }
   }
